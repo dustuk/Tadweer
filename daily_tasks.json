@@ -1,0 +1,62 @@
+[
+    {
+        "name": "مجموعة علي حسين العوجان 303",
+        "completed": false,
+        "time": "01:00 صباحًا"
+    },
+    {
+        "name": "صلاة الفجر",
+        "completed": true,
+        "time": "04:30 صباحًا"
+    },
+    {
+        "name": "وجبة الفطور",
+        "completed": true,
+        "time": "06:00 صباحًا"
+    },
+    {
+        "name": "الذهاب الى المدرسة",
+        "completed": true,
+        "time": "06:30 صباحًا"
+    },
+    {
+        "name": "صلاة الظهر",
+        "completed": true,
+        "time": "12:00 مساءً"
+    },
+    {
+        "name": "وجبة الغداء",
+        "completed": true,
+        "time": "01:30 مساءً"
+    },
+    {
+        "name": "صلاة العصر",
+        "completed": true,
+        "time": "03:30 مساءً"
+    },
+    {
+        "name": "مذاكرة",
+        "completed": true,
+        "time": "04:00 مساءً"
+    },
+    {
+        "name": "صلاة المغرب",
+        "completed": true,
+        "time": "06:00 مساءً"
+    },
+    {
+        "name": "صلاة العشاء",
+        "completed": true,
+        "time": "07:30 مساءً"
+    },
+    {
+        "name": "وجبة العشاء",
+        "completed": true,
+        "time": "08:30 مساءً"
+    },
+    {
+        "name": "النوم",
+        "completed": true,
+        "time": "09:30 مساءً"
+    }
+]

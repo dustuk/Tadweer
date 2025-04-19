@@ -1,0 +1,22 @@
+[
+    {
+        "name": "صيام",
+        "completed": true,
+        "day": "الاثنين"
+    },
+    {
+        "name": "صيام",
+        "completed": true,
+        "day": "الخميس"
+    },
+    {
+        "name": "صلاة الجمعة",
+        "completed": true,
+        "day": "الجمعة"
+    },
+    {
+        "name": "زيارة الاهل",
+        "completed": true,
+        "day": "الجمعة"
+    }
+]
