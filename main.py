@@ -4,6 +4,7 @@ import json
 import os
 from datetime import datetime
 
+# تعريف أسماء الملفات الخاصة بالمهام حسب الفئات
 TODO_FILES = {
     "يومي": "daily_tasks.json",
     "أسبوعي": "weekly_tasks.json",
@@ -11,11 +12,13 @@ TODO_FILES = {
     "سنوي": "yearly_tasks.json"
 }
 
+# أيام الأسبوع والشهور والفترات الزمنية (صباحًا / مساءً)
 WEEK_DAYS = ["الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت", "الأحد"]
 MONTHS = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو",
           "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"]
 PERIODS = ["صباحًا", "مساءً"]
 
+# دالة لتحميل المهام من الملفات
 def load_tasks():
     tasks = {}
     for category, filename in TODO_FILES.items():
@@ -26,11 +29,13 @@ def load_tasks():
             tasks[category] = []
     return tasks
 
+# دالة لحفظ المهام في الملفات
 def save_tasks(category):
     filename = TODO_FILES[category]
     with open(filename, 'w', encoding='utf-8') as file:
         json.dump(tasks[category], file, indent=4, ensure_ascii=False)
 
+# دالة لإضافة أو تعديل مهمة جديدة
 def add_task():
     task_name = entry_task.get()
     category = category_var.get()
@@ -42,6 +47,7 @@ def add_task():
     task_data = {"name": task_name, "completed": False}
 
     try:
+        # إضافة معلومات خاصة بالمهمة حسب الفئة المختارة
         if category == "يومي":
             hour = daily_hour.get()
             minute = daily_minute.get()
@@ -49,7 +55,7 @@ def add_task():
             if not (hour and minute and period):
                 raise ValueError("يرجى تحديد الوقت بالكامل")
             time_str = f"{hour}:{minute} {period}"
-            datetime.strptime(f"{hour}:{minute}", "%I:%M")  # Validate
+            datetime.strptime(f"{hour}:{minute}", "%I:%M")  # التحقق من صحة الوقت
             task_data["time"] = time_str
         elif category == "أسبوعي":
             day = weekly_day.get()
@@ -72,6 +78,7 @@ def add_task():
         messagebox.showerror("خطأ", str(e))
         return
 
+    # إذا كانت المهمة هي تعديل لمهمة موجودة مسبقًا
     if hasattr(entry_task, "edit_index"):
         tasks[category][entry_task.edit_index] = task_data
         del entry_task.edit_index
@@ -79,11 +86,13 @@ def add_task():
     else:
         tasks[category].append(task_data)
 
+    # حفظ المهام المحدثة
     save_tasks(category)
-    update_task_list()
+    update_task_list()  # تحديث قائمة المهام
     entry_task.delete(0, tk.END)
     clear_time_entries()
 
+# دالة لمسح قيم الوقت المدخلة
 def clear_time_entries():
     daily_hour.set('')
     daily_minute.set('')
@@ -93,6 +102,7 @@ def clear_time_entries():
     yearly_day.set('')
     yearly_month.set('')
 
+# دالة لتحديث الواجهة الخاصة باختيار الفئة والوقت
 def update_time_frame():
     daily_frame.pack_forget()
     weekly_frame.pack_forget()
@@ -109,12 +119,15 @@ def update_time_frame():
     elif category == "سنوي":
         yearly_frame.pack(side=tk.LEFT, padx=5)
 
+# دالة لتحديث قائمة المهام المعروضة
 def update_task_list():
+    # مسح جميع المهام المعروضة حاليًا
     for widget in list_frame.winfo_children():
         widget.destroy()
 
     category = category_var.get()
 
+    # عرض المهام لكل فئة
     for index, task in enumerate(tasks[category]):
         row = tk.Frame(list_frame, bg='white', pady=4)
         row.pack(fill=tk.X, padx=5, anchor='e')
@@ -138,6 +151,7 @@ def update_task_list():
             category_var.set(category)
             update_time_frame()
 
+            # ملء حقول الوقت أو التاريخ حسب الفئة
             if category == "يومي":
                 if "time" in task:
                     time_parts = task["time"].split()
@@ -156,6 +170,7 @@ def update_task_list():
             entry_task.edit_index = idx
             button_add.config(text="💾 حفظ التعديل")
 
+        # إضافة أزرار التعديل والحذف
         edit_btn = tk.Button(row, text="✏️", fg='blue', command=edit_closure,
                              bd=0, font=('Arial', 16), bg='white')
         edit_btn.pack(side=tk.LEFT, padx=5)
@@ -174,6 +189,7 @@ def update_task_list():
         )
         checkbox.pack(side=tk.RIGHT, padx=10, fill=tk.X, expand=True)
 
+        # عرض تفاصيل المهمة
         detail = task["name"]
         if category == "يومي" and "time" in task:
             detail += f" - الساعة {task['time']}"
@@ -190,21 +206,26 @@ def update_task_list():
 # بدء الواجهة
 root = tk.Tk()
 root.title("🗓️ إدارة المهام")
-root.geometry("800x600")
-root.configure(bg='#EAF4F4')
+root.geometry("900x700")  # تعديل حجم الواجهة الافتراضي
+root.configure(bg='#EAF4F4')  # تغيير لون الخلفية
 
+# تحميل المهام من الملفات
 tasks = load_tasks()
 
+# إعداد واجهة العنوان
 title_frame = tk.Frame(root, bg='#2C7A7B', padx=10, pady=10, bd=2, relief=tk.RIDGE)
 tk.Label(title_frame, text="📌 إدارة المهام", font=('Cairo', 18, 'bold'), bg='#2C7A7B', fg='white').pack()
 title_frame.pack(fill=tk.X, pady=(0, 10))
 
+# إعداد اللوحة الرئيسية
 main_panel = tk.Frame(root, bg='#EAF4F4', padx=10, pady=10)
 main_panel.pack(fill=tk.BOTH, expand=True)
 
+# إعداد لوحة الإدخال
 input_panel = tk.Frame(main_panel, bg='white', padx=15, pady=15, bd=2, relief=tk.GROOVE)
 input_panel.pack(side=tk.LEFT, fill=tk.Y, pady=5, padx=5)
 
+# إعداد اللوحة الخاصة بإضافة المهام
 task_frame = tk.Frame(input_panel, bg='white')
 task_frame.pack(side=tk.TOP, pady=10)
 
@@ -216,6 +237,7 @@ button_add = tk.Button(task_frame, text="➕ إضافة", command=add_task, bg='
                        font=('Cairo', 11), bd=0, relief=tk.RIDGE, padx=5, pady=3)
 button_add.pack(fill=tk.X)
 
+# إعداد اختيار الفئة
 category_frame = tk.Frame(input_panel, bg='white')
 category_frame.pack(side=tk.TOP, pady=10)
 
@@ -227,6 +249,7 @@ for cat in categories:
                    value=cat, command=lambda: [update_time_frame(), update_task_list()],
                    bg='white', anchor='w', font=('Cairo', 10)).pack(anchor='w')
 
+# إعداد الإطارات الخاصة بالوقت والتاريخ
 time_frame = tk.Frame(input_panel, bg='white')
 time_frame.pack(side=tk.TOP, pady=10)
 
@@ -258,6 +281,7 @@ tk.Label(yearly_frame, text="شهر", bg='white').pack(side=tk.RIGHT, padx=(5, 0
 yearly_month = ttk.Combobox(yearly_frame, values=MONTHS, state="readonly", width=10)
 yearly_month.pack(side=tk.RIGHT)
 
+# إعداد إطار المهام
 tasks_frame = tk.Frame(main_panel, bg='white', padx=10, pady=10, bd=2, relief=tk.GROOVE)
 tasks_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True, pady=5, padx=5)
 
@@ -265,6 +289,7 @@ task_label = tk.Label(tasks_frame, text="📋 قائمة المهام", bg='whit
                       font=('Cairo', 13, 'bold'), anchor='center')
 task_label.pack(fill=tk.X, pady=(0, 10))
 
+# إعداد واجهة التمرير لعرض المهام
 canvas = tk.Canvas(tasks_frame, bg='white', highlightthickness=0)
 scrollbar = tk.Scrollbar(tasks_frame, orient="vertical", command=canvas.yview)
 canvas.configure(yscrollcommand=scrollbar.set)
@@ -280,6 +305,9 @@ scrollbar.pack(side="left", fill="y")
 canvas.pack(side="right", fill="both", expand=True)
 list_frame = scrollable_frame
 
+# تحديث الواجهة وعرض المهام
 update_time_frame()
 update_task_list()
+
+# بدء تشغيل الواجهة
 root.mainloop()
