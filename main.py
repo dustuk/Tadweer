@@ -5,13 +5,21 @@ import json  # لحفظ وقراءة البيانات بصيغة JSON
 import os  # للتحقق من وجود الملفات
 from datetime import datetime  # للتحقق من تنسيق الوقت
 
-# تحديد أسماء ملفات المهام حسب نوعها
+# مجلد حفظ المهام
+TASK_FOLDER = "task"
+
+# التأكد من وجود مجلد task، وإذا لم يكن موجودًا يتم إنشاؤه
+if not os.path.exists(TASK_FOLDER):
+    os.makedirs(TASK_FOLDER)
+
+# تحديد أسماء ملفات المهام حسب نوعها داخل مجلد task
 TODO_FILES = {
-    "يومي": "daily_tasks.json",
-    "أسبوعي": "weekly_tasks.json",
-    "شهري": "monthly_tasks.json",
-    "سنوي": "yearly_tasks.json"
+    "يومي": os.path.join(TASK_FOLDER, "daily_tasks.json"),
+    "أسبوعي": os.path.join(TASK_FOLDER, "weekly_tasks.json"),
+    "شهري": os.path.join(TASK_FOLDER, "monthly_tasks.json"),
+    "سنوي": os.path.join(TASK_FOLDER, "yearly_tasks.json")
 }
+
 
 # قائمة أيام الأسبوع والشهور والفترات (صباحًا / مساءً)
 WEEK_DAYS = ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"]
